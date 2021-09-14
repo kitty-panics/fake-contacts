@@ -1,0 +1,86 @@
+#!/usr/bin/env python3
+# -*- coding:utf-8 -*-
+
+#
+# Fake Contacts
+#
+
+# 导模块
+import random
+import sys
+import linecache
+from typing import Union, List
+
+
+# 随机姓名
+def random_name():
+    # 随机读取 百家姓 文件的中 1 行
+    RANDOM_XING_LINE = random.randint(1, 504)
+    SET_XING = linecache.getline('./res/100.txt', RANDOM_XING_LINE)
+
+    # 随机读取 通用规范汉字表 文件的中 1/2 行
+    SET_MING = []
+    RANDOM_MING_LENTH = random.randint(1, 2)
+    for i in range(1, RANDOM_MING_LENTH + 1):
+        RANDOM_MING_LINE = random.randint(1, 8105)
+        SET_MING.append(linecache.getline('./res/8105.txt', RANDOM_MING_LINE))
+
+    # 组合成完整名字
+    if RANDOM_MING_LENTH == 1:
+        return SET_XING.replace("\n", '') + SET_MING[0].replace("\n", '')
+    elif RANDOM_MING_LENTH == 2:
+        return SET_XING.replace("\n", '') + SET_MING[0].replace("\n", '') + SET_MING[1].replace("\n", '')
+
+
+# 网络识别号
+def random_num_1():
+    # Line1:   中国电信+中国卫通
+    # Line2:   中国联通+中国网通
+    # Line3,4: 中国移动+中国铁通
+    IDENTIFIER = ['33', '42', '44', '46', '48', '49', '53', '80', '81', '89',
+                  '30', '31', '32', '41', '43', '45', '55', '56', '85', '86',
+                  '34', '35', '36', '37', '38', '39', '40', '47', '50', '51',
+                  '52', '57', '58', '59', '82', '83', '87', '88']
+    IDENTIFIER_LENH = len(IDENTIFIER) - 1
+    RANDOM_IDENTIFIER_LENTH = random.randint(0, IDENTIFIER_LENH)
+    PHONE_NUM_1 = IDENTIFIER[RANDOM_IDENTIFIER_LENTH]
+    return PHONE_NUM_1
+
+
+# 地区编码 (暂未找到数据，暂用 random_num_3 代替)
+#def random_num_2():
+
+
+# 用户号码
+def random_num_3():
+    PHONE_NUM_3 = random.randint(1, 9999)
+    if PHONE_NUM_3 < 10 and PHONE_NUM_3 >= 1:
+        PHONE_NUM_3 = "000" + str(PHONE_NUM_3)
+    elif PHONE_NUM_3 < 100 and PHONE_NUM_3 >= 10:
+        PHONE_NUM_3 = "00" + str(PHONE_NUM_3)
+    elif PHONE_NUM_3 < 1000 and PHONE_NUM_3 >= 100:
+        PHONE_NUM_3 = "0" + str(PHONE_NUM_3)
+    return str(PHONE_NUM_3)
+
+
+# 按间距中的绿色按钮以运行脚本。
+if __name__ == '__main__':
+    # 生成的类型 (csv, vcf)
+    GEN_TYPE = sys.argv[1]
+    # 生成的个数
+    GEN_NUM = sys.argv[2]
+
+    # 生成联系人
+    if GEN_TYPE == "csv":
+        for i in range(1, int(GEN_NUM) + 1):
+            print(random_name() + ", 1" + random_num_1() + random_num_3() + random_num_3())
+    elif GEN_TYPE == "vcf":
+        for i in range(1, int(GEN_NUM) + 1):
+            print("BEGIN:VCARD\n"                                                                    +
+                  "VERSION:2.1\n"                                                                    +
+                  "N;CHARSET=UTF-8;\n"                                                               +
+                  "FN;CHARSET=UTF-8;\n"                                                              +
+                  "TEL;CELL:1" + random_num_1() + "-" + random_num_3() + "-" + random_num_3() + "\n" +
+                  "END:VCARD")
+    else:
+        print("=> 参数错误。")
