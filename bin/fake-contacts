@@ -21,7 +21,8 @@ def random_name():
     SET_MING = []
     RANDOM_MING_LENTH = random.randint(1, 2)
     for i in range(1, RANDOM_MING_LENTH + 1):
-        RANDOM_MING_LINE = random.randint(1, 8105)
+        #RANDOM_MING_LINE = random.randint(1, 8105)
+        RANDOM_MING_LINE = random.randint(1, 6500)
         SET_MING.append(linecache.getline('../res/8105.txt', RANDOM_MING_LINE))
 
     # 组合成完整名字
@@ -62,8 +63,8 @@ def random_num_3():
     return str(PHONE_NUM_3)
 
 
-# 按间距中的绿色按钮以运行脚本。
-if __name__ == '__main__':
+# 参数判断
+def judgment_parameters():
     # 生成的类型 (csv, vcf)
     GEN_TYPE = sys.argv[1]
     # 生成的个数
@@ -76,11 +77,18 @@ if __name__ == '__main__':
             print(random_name() + ", 1" + random_num_1() + random_num_3() + random_num_3())
     elif GEN_TYPE == "vcf":
         for i in range(1, int(GEN_NUM) + 1):
+            tmp_name = random_name()
             print("BEGIN:VCARD\n"                                                                    +
                   "VERSION:2.1\n"                                                                    +
-                  "N;CHARSET=UTF-8;\n"                                                               +
-                  "FN;CHARSET=UTF-8;\n"                                                              +
+                  "FN:" + tmp_name + "\n"                                                            +
+                  "N:"  + tmp_name + "\n"                                                            +
                   "TEL;CELL:1" + random_num_1() + "-" + random_num_3() + "-" + random_num_3() + "\n" +
                   "END:VCARD")
     else:
         print("=> 参数错误。")
+
+
+# 程序入口
+if __name__ == '__main__':
+    judgment_parameters()
+
